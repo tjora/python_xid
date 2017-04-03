@@ -8,11 +8,10 @@ import platform
 import time
 import datetime
 import threading
-
 import base32hex
 
 # MyPy imports
-from typing import List
+#from typing import List
 
 # Some Constants
 trimLen = 20
@@ -26,20 +25,20 @@ class InvalidXid(Exception):
 def randInt():
     # type: () -> int
     buf = os.urandom(3)
-    buford = map(ord, buf)
-    return buford[0] << 16 | buford[1] << 8 | buford[2]
+    #buford = [six.byte2int(x) for x in buf]
+    return buf[0] << 16 | buf[1] << 8 | buf[2]
 
 def realMachineID():
     # type: () -> List[int]
     try:
         hostname = platform.node()
         hw = hashlib.md5()
-        hw.update(hostname)
+        hw.update(hostname.encode("ascii"))
         val = hw.digest()[:3]
-        return map(ord, val)
+        return bytes(val)
     except:
         buf = os.urandom(3)
-        return map(ord, buf)
+        return bytes(buf)
 
 ## Module level items
 pid = os.getpid()
@@ -75,13 +74,13 @@ def generate_new_xid():
     id[7] = (pid >> 8) & 0xff
     id[8] = (pid) & 0xff
 
-    i = objectIDGenerator.next()
+    i = next(objectIDGenerator)
 
     id[9] = (i >> 16) & 0xff
     id[10] = (i >> 8) & 0xff
     id[11] = (i) & 0xff
 
-    return id
+    return bytes(id)
 
 
 
@@ -104,7 +103,7 @@ class Xid(object):
 
     def machine(self):
         # type: () -> str
-        return ''.join(map(chr, self.value[4:7]))
+        return self.value[4:7]
 
     def datetime(self):
         return datetime.datetime.fromtimestamp(self.time())
@@ -123,7 +122,7 @@ class Xid(object):
 
     def bytes(self):
         # type: () -> str
-        return ''.join(map(chr, self.value))        
+        return self.value
 
     def __repr__(self):
         return "<Xid '%s'>" % self.__str__()
