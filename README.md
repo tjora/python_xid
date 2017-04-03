@@ -1,6 +1,6 @@
 # Globally Unique ID Generator
 
-> This project is a python implementation of the Go Lang library found here: [https://github.com/rs/xid](https://github.com/rs/xid)
+> This project is a python 3.x implementation of the Go Lang library found here: [https://github.com/rs/xid](https://github.com/rs/xid)
 
 __I've included the ReadMe from that project here (with some modifications for python).__
 
@@ -62,10 +62,10 @@ References:
 - https://en.wikipedia.org/wiki/Universally_unique_identifier
 - https://blog.twitter.com/2010/announcing-snowflake
 
-## Install
+## Install this version (not official one)
 
 ```bash
-easy_install python_xid
+pip install git+https://github.com/tjora/python_xid.git
 ```
 ## Usage
 
@@ -73,7 +73,7 @@ easy_install python_xid
 from xid import Xid
 guid = Xid()
 
-print guid.string()
+print(guid.string())
 // Output: 9m4e2mr0ui3e8a215n4g
 ```
 
