@@ -124,6 +124,9 @@ class Xid(object):
         # type: () -> str
         return self.value
 
+    def __bytes__(self):
+        return self.value
+
     def __repr__(self):
         return "<Xid '%s'>" % self.__str__()
 
@@ -131,21 +134,21 @@ class Xid(object):
         return self.string()
 
     def __lt__(self, arg):
-        # type: (Xid) -> bool        
+        # type: (Xid) -> bool
         return self.string() < arg.string()
 
     def __gt__(self, arg):
-        # type: (Xid) -> bool        
+        # type: (Xid) -> bool
         return self.string() > arg.string()
 
     @classmethod
     def from_string(cls, s):
         # type: (str) -> Xid
         val = base32hex.b32decode(s.upper())
-        value_check = [0 < x < 255 for x in val]
+        value_check = [0 <= x < 256 for x in val]
 
         if not all(value_check):
             raise InvalidXid(s)
-        
+
         return cls(val)
 
