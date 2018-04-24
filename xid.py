@@ -43,16 +43,14 @@ def realMachineID():
 ## Module level items
 pid = os.getpid()
 machineID = realMachineID()
+_lock = threading.Lock()
 
 def generateNextId():
     id = randInt()
-    lock = threading.Lock()
 
     while True:
-        lock.acquire()
         new_id = id + 1
         id += 1
-        lock.release()
         yield new_id
 
 objectIDGenerator = generateNextId()
@@ -74,7 +72,8 @@ def generate_new_xid():
     id[7] = (pid >> 8) & 0xff
     id[8] = (pid) & 0xff
 
-    i = next(objectIDGenerator)
+    with _lock:
+        i = next(objectIDGenerator)
 
     id[9] = (i >> 16) & 0xff
     id[10] = (i >> 8) & 0xff
